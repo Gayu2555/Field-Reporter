@@ -29,4 +29,4 @@ Sebelum memulai, pastikan Anda memiliki perangkat dengan perangkat lunak berikut
 
 1. **Clone repositori ini**
    ```bash
-   git clone https://github.com/username/field-reporter.git
+   git clone https://github.com/Gayu2555/Field-Reporter.git
