@@ -1,7 +1,8 @@
 .env
-backend/
+backend
 vendor/
 node_modules/
 package.json
 package-lock.json
 composer.json
+src/
