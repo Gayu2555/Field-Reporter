@@ -31,7 +31,7 @@
                     <a href="index.html" class="text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-lg transition-colors">
                         Home
                     </a>
-                    <a href="report-logs.html" class="text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-lg transition-colors">
+                    <a href="report_log.php" class="text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-lg transition-colors">
                         Report Logs
                     </a>
                 </div>
@@ -275,7 +275,7 @@
                         formData.append('photos[]', photo);
                     });
 
-                    const response = await fetch('backend/report.php', {
+                    const response = await fetch('backend/proces.php', {
                         method: 'POST',
                         body: formData
                     });
