@@ -118,29 +118,60 @@
             </div>
         </div>
     </div>
-    <div id="gauthModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
-        <div class="bg-white dark:bg-gray-800 rounded-lg p-6 sm:p-8 max-w-md w-full mx-4">
-            <h2 class="text-xl sm:text-2xl font-bold mb-4 dark:text-white">Two-Factor Verification</h2>
-            <p class="text-gray-600 dark:text-gray-300 mb-4">Enter the code from your Google Authenticator</p>
-            <div class="space-y-4">
-                <input type="text"
-                    id="gauthCode"
-                    class="block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    placeholder="Enter 6-digit code"
-                    maxlength="6"
-                    pattern="[0-9]*"
-                    autocomplete="off">
-                <div class="flex justify-end space-x-3">
-                    <button id="cancelGauth" class="px-4 py-2 text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100">
-                        Cancel
-                    </button>
-                    <button id="submitGauth"
-                        class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                        Verify
-                    </button>
+    <div id="gauthModal" class="fixed inset-0 z-50 hidden">
+        <!-- Overlay backdrop -->
+        <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"></div>
+
+        <!-- Modal container with perfect center alignment -->
+        <div class="fixed inset-0 z-50 overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+                <div class="relative transform overflow-hidden rounded-lg bg-white dark:bg-gray-700 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-md">
+                    <div class="p-6">
+                        <!-- Modal header with icon -->
+                        <div class="flex items-center justify-center mb-6">
+                            <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-indigo-100 dark:bg-indigo-900">
+                                <svg class="h-6 w-6 text-indigo-600 dark:text-indigo-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Modal content -->
+                        <div class="text-center">
+                            <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white mb-4">
+                                Verifikasi 2FA
+                            </h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-300 mb-6">
+                                Masukkan 6 digit kode dari Google Authenticator Anda
+                            </p>
+                            <div class="mb-6">
+                                <input type="text"
+                                    id="gauthCode"
+                                    maxlength="6"
+                                    autocomplete="off"
+                                    class="block w-full rounded-md border border-gray-300 px-4 py-3 text-center text-lg tracking-widest placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:placeholder-gray-300"
+                                    placeholder="000000">
+                            </div>
+                        </div>
+
+                        <!-- Modal footer with actions -->
+                        <div class="flex flex-col-reverse sm:flex-row sm:justify-center gap-3">
+                            <button type="button"
+                                id="cancelGauth"
+                                class="inline-flex justify-center rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 w-full sm:w-auto">
+                                Batal
+                            </button>
+                            <button type="button"
+                                id="submitGauth"
+                                class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:bg-indigo-700 dark:hover:bg-indigo-600 w-full sm:w-auto">
+                                Verifikasi
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <script src="login.js"></script>
 </body>
