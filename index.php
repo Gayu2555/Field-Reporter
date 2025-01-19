@@ -1,6 +1,3 @@
-Here's the refactored HTML with improved mobile responsiveness using Tailwind CSS:
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 
