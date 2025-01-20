@@ -1,8 +1,9 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['user_logged_in']) || $_SESSION['user_logged_in'] !== true) {
-    header('index.php');
+if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+    header('HTTP/1.1 401 Unauthorized');
+    echo json_encode(['success' => false, 'message' => 'Anda harus login terlebih dahulu']);
     exit();
 }
 ?>
