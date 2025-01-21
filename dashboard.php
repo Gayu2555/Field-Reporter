@@ -17,7 +17,6 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     <title>Form Reporter Lapangan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/3.4.4/luxon.min.js"></script>
-    <!-- Toast notification library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.12.0/toastify.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.12.0/toastify.min.css">
 </head>
@@ -37,12 +36,15 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
                 </div>
 
                 <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center space-x-1">
+                <div class="hidden md:flex items-center space-x-4">
                     <a href="index.html" class="text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-lg transition-colors">
                         Home
                     </a>
                     <a href="report_log.php" class="text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-lg transition-colors">
                         Report Logs
+                    </a>
+                    <a href="logout.php" class="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors">
+                        Logout
                     </a>
                 </div>
 
@@ -57,14 +59,19 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
             </div>
 
             <!-- Mobile Menu -->
-            <div id="mobileMenu" class="hidden md:hidden py-2">
-                <div class="space-y-1">
+            <div id="mobileMenu" class="hidden md:hidden py-2 absolute w-full left-0 bg-white/95 backdrop-blur-md border-b border-indigo-100">
+                <div class="space-y-1 px-4">
                     <a href="index.html" class="block text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-lg transition-colors">
                         Home
                     </a>
-                    <a href="report-logs.html" class="block text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-lg transition-colors">
+                    <a href="report_log.php" class="block text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-lg transition-colors">
                         Report Logs
                     </a>
+                    <div class="pt-2 border-t border-gray-200">
+                        <a href="logout.php" class="block text-red-600 hover:text-red-700 hover:bg-red-50 px-4 py-2 rounded-lg transition-colors">
+                            Logout
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -162,14 +169,9 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
                     </svg>
                 </button>
             </div>
-            <div class="mt-6 text-center">
-                <button onclick="window.location.href='logout.php'"
-                    class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
-                    Logout
-                </button>
-            </div>
         </form>
     </div>
+
 
     <script>
         // Mobile menu toggle
@@ -177,162 +179,180 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
         const mobileMenu = document.getElementById('mobileMenu');
 
         mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
+            const isHidden = mobileMenu.classList.contains('hidden');
+            if (isHidden) {
+                mobileMenu.classList.remove('hidden');
+                mobileMenu.classList.add('animate-fade-in');
+            } else {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.classList.remove('animate-fade-in');
+            }
         });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('reportForm');
-            const photoInput = document.getElementById('photos');
-            const previewContainer = document.getElementById('preview');
-            const photoCountElement = document.getElementById('photoCount');
-            const resetBtn = document.getElementById('resetBtn');
-            const MAX_PHOTOS = 4;
-            const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-            let currentPhotos = [];
 
-            // Set default datetime-local to current time
-            const now = new Date();
-            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-            document.getElementById('when').value = now.toISOString().slice(0, 16);
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (event) => {
+            const isClickInsideMenu = mobileMenu.contains(event.target);
+            const isClickOnButton = mobileMenuBtn.contains(event.target);
 
-            // Photo handling
-            photoInput.addEventListener('change', function(e) {
-                const files = Array.from(e.target.files);
-
-                // Validate number of files
-                if (currentPhotos.length + files.length > MAX_PHOTOS) {
-                    showToast('Maksimal 4 foto yang diperbolehkan', 'error');
-                    return;
-                }
-
-                // Process each file
-                files.forEach(file => {
-                    // Validate file size
-                    if (file.size > MAX_FILE_SIZE) {
-                        showToast(`File ${file.name} terlalu besar. Maksimal 5MB`, 'error');
-                        return;
-                    }
-
-                    // Validate file type
-                    if (!file.type.startsWith('image/')) {
-                        showToast(`File ${file.name} bukan format gambar yang valid`, 'error');
-                        return;
-                    }
-
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        const photoDiv = document.createElement('div');
-                        photoDiv.className = 'relative';
-
-                        const img = document.createElement('img');
-                        img.src = event.target.result;
-                        img.className = 'w-full h-32 object-cover rounded-lg';
-
-                        const deleteBtn = document.createElement('button');
-                        deleteBtn.className = 'absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600';
-                        deleteBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
-                        deleteBtn.onclick = function() {
-                            photoDiv.remove();
-                            currentPhotos = currentPhotos.filter(p => p !== file);
-                            updatePhotoCount();
-                        };
-
-                        photoDiv.appendChild(img);
-                        photoDiv.appendChild(deleteBtn);
-                        previewContainer.appendChild(photoDiv);
-                        currentPhotos.push(file);
-                        updatePhotoCount();
-                    };
-                    reader.readAsDataURL(file);
-                });
-            });
-
-            function updatePhotoCount() {
-                photoCountElement.textContent = `${currentPhotos.length}/${MAX_PHOTOS} foto`;
-            }
-
-            function showToast(message, type = 'info') {
-                Toastify({
-                    text: message,
-                    duration: 3000,
-                    gravity: "top",
-                    position: "right",
-                    backgroundColor: type === 'error' ? "#EF4444" : "#10B981",
-                }).showToast();
-            }
-
-            // Form submission
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-
-                // Validate required fields
-                const requiredFields = ['who', 'what', 'where', 'when', 'why', 'how'];
-                let isValid = true;
-                requiredFields.forEach(field => {
-                    const element = document.getElementById(field);
-                    if (!element.value.trim()) {
-                        showToast(`Field ${field} harus diisi`, 'error');
-                        element.classList.add('border-red-500');
-                        isValid = false;
-                    } else {
-                        element.classList.remove('border-red-500');
-                    }
-                });
-
-                if (!isValid) return;
-
-                try {
-                    const formData = new FormData(form);
-
-                    // Add photos to FormData
-                    formData.delete('photos[]'); // Remove the empty file input
-                    currentPhotos.forEach(photo => {
-                        formData.append('photos[]', photo);
-                    });
-
-                    const response = await fetch('backend/proces.php', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-
-                    const result = await response.text();
-                    showToast('Laporan berhasil dikirim!');
-
-                    // Optional: Reset form after successful submission
-                    if (confirm('Laporan berhasil dikirim. Buat laporan baru?')) {
-                        resetForm();
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    showToast('Terjadi kesalahan saat mengirim laporan', 'error');
-                }
-            });
-
-            // Reset form
-            resetBtn.addEventListener('click', () => {
-                if (confirm('Anda yakin ingin mereset form?')) {
-                    resetForm();
-                }
-            });
-
-            function resetForm() {
-                form.reset();
-                previewContainer.innerHTML = '';
-                currentPhotos = [];
-                updatePhotoCount();
-
-                // Reset datetime-local to current time
-                const now = new Date();
-                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-                document.getElementById('when').value = now.toISOString().slice(0, 16);
+            if (!isClickInsideMenu && !isClickOnButton && !mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.classList.remove('animate-fade-in');
             }
         });
     </script>
 </body>
 
 </html>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('reportForm');
+        const photoInput = document.getElementById('photos');
+        const previewContainer = document.getElementById('preview');
+        const photoCountElement = document.getElementById('photoCount');
+        const resetBtn = document.getElementById('resetBtn');
+        const MAX_PHOTOS = 4;
+        const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+        let currentPhotos = [];
+
+        // Set default datetime-local to current time
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        document.getElementById('when').value = now.toISOString().slice(0, 16);
+
+        // Photo handling
+        photoInput.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+
+            // Validate number of files
+            if (currentPhotos.length + files.length > MAX_PHOTOS) {
+                showToast('Maksimal 4 foto yang diperbolehkan', 'error');
+                return;
+            }
+
+            // Process each file
+            files.forEach(file => {
+                // Validate file size
+                if (file.size > MAX_FILE_SIZE) {
+                    showToast(`File ${file.name} terlalu besar. Maksimal 5MB`, 'error');
+                    return;
+                }
+
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    showToast(`File ${file.name} bukan format gambar yang valid`, 'error');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const photoDiv = document.createElement('div');
+                    photoDiv.className = 'relative';
+
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    img.className = 'w-full h-32 object-cover rounded-lg';
+
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600';
+                    deleteBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
+                    deleteBtn.onclick = function() {
+                        photoDiv.remove();
+                        currentPhotos = currentPhotos.filter(p => p !== file);
+                        updatePhotoCount();
+                    };
+
+                    photoDiv.appendChild(img);
+                    photoDiv.appendChild(deleteBtn);
+                    previewContainer.appendChild(photoDiv);
+                    currentPhotos.push(file);
+                    updatePhotoCount();
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        function updatePhotoCount() {
+            photoCountElement.textContent = `${currentPhotos.length}/${MAX_PHOTOS} foto`;
+        }
+
+        function showToast(message, type = 'info') {
+            Toastify({
+                text: message,
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                backgroundColor: type === 'error' ? "#EF4444" : "#10B981",
+            }).showToast();
+        }
+
+        // Form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Validate required fields
+            const requiredFields = ['who', 'what', 'where', 'when', 'why', 'how'];
+            let isValid = true;
+            requiredFields.forEach(field => {
+                const element = document.getElementById(field);
+                if (!element.value.trim()) {
+                    showToast(`Field ${field} harus diisi`, 'error');
+                    element.classList.add('border-red-500');
+                    isValid = false;
+                } else {
+                    element.classList.remove('border-red-500');
+                }
+            });
+
+            if (!isValid) return;
+
+            try {
+                const formData = new FormData(form);
+
+                // Add photos to FormData
+                formData.delete('photos[]'); // Remove the empty file input
+                currentPhotos.forEach(photo => {
+                    formData.append('photos[]', photo);
+                });
+
+                const response = await fetch('backend/proces.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.text();
+                showToast('Laporan berhasil dikirim!');
+
+                // Optional: Reset form after successful submission
+                if (confirm('Laporan berhasil dikirim. Buat laporan baru?')) {
+                    resetForm();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Terjadi kesalahan saat mengirim laporan', 'error');
+            }
+        });
+
+        // Reset form
+        resetBtn.addEventListener('click', () => {
+            if (confirm('Anda yakin ingin mereset form?')) {
+                resetForm();
+            }
+        });
+
+        function resetForm() {
+            form.reset();
+            previewContainer.innerHTML = '';
+            currentPhotos = [];
+            updatePhotoCount();
+
+            // Reset datetime-local to current time
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('when').value = now.toISOString().slice(0, 16);
+        }
+    });
+</script>
