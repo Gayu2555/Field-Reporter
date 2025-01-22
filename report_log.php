@@ -21,38 +21,68 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 
 <body class="bg-gradient-to-br from-indigo-50 to-indigo-100 min-h-screen">
     <!-- Navbar - sama seperti index.html -->
-    <nav class="bg-white/80 backdrop-blur-md border-b border-indigo-100 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center space-x-3">
-                    <div class="h-10 w-10 bg-indigo-600 rounded-lg flex items-center justify-center">
-                        <span class="text-white text-xl font-bold">R</span>
-                    </div>
-                    <span class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-indigo-800 bg-clip-text text-transparent">
-                        URBANSIANA | REPORTER SYSTEM
-                    </span>
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex justify-between h-16">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3">
+                <div class="h-10 w-10 bg-indigo-600 rounded-lg flex items-center justify-center">
+                    <span class="text-white text-xl font-bold">R</span>
                 </div>
+                <span class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-indigo-800 bg-clip-text text-transparent">
+                    URBANSIANA | REPORTER SYSTEM
+                </span>
+            </div>
 
-                <div class="hidden md:flex items-center space-x-1">
-                    <a href="index.html" class="text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-lg transition-colors">
-                        Home
-                    </a>
-                    <a href="report-logs.html" class="text-indigo-600 bg-indigo-50 px-4 py-2 rounded-lg transition-colors">
-                        Report Logs
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="dashboard.php" class="text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-lg transition-colors">
+                    Home
+                </a>
+                <a href="report_log.php" class="text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-lg transition-colors">
+                    Report Logs
+                </a>
+                <a href="logout.php" class="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors">
+                    Logout
+                </a>
+            </div>
+
+
+            <div class="md:hidden flex items-center">
+                <button id="mobileMenuBtn" class="text-gray-700 hover:text-indigo-600 p-2 rounded-lg hover:bg-indigo-50">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+
+        <div id="mobileMenu" class="hidden md:hidden py-2 absolute w-full left-0 bg-white/95 backdrop-blur-md border-b border-indigo-100">
+            <div class="space-y-1 px-4">
+                <a href="inde class=" block text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-lg transition-colors">
+                    Home
+                </a>
+                <a href="report_log.php" class="block text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-lg transition-colors">
+                    Report Logs
+                </a>
+                <div class="pt-2 border-t border-gray-200">
+                    <a href="logout.php" class="block text-red-600 hover:text-red-700 hover:bg-red-50 px-4 py-2 rounded-lg transition-colors">
+                        Logout
                     </a>
                 </div>
             </div>
         </div>
+    </div>
     </nav>
 
     <div class="max-w-7xl mx-auto py-8 px-4">
-        <!-- Header Section -->
+
         <div class="mb-8">
             <h1 class="text-3xl font-bold text-gray-900">Riwayat Laporan</h1>
             <p class="mt-2 text-gray-600">Daftar semua laporan yang telah dikirim</p>
         </div>
 
-        <!-- Filter Section -->
+
         <div class="bg-white rounded-lg shadow p-4 mb-6">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
@@ -76,7 +106,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
             </div>
         </div>
 
-        <!-- Reports Table -->
+
         <div class="bg-white rounded-lg shadow overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -90,12 +120,12 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
                         </tr>
                     </thead>
                     <tbody id="reportsTableBody" class="bg-white divide-y divide-gray-200">
-                        <!-- Data akan diisi melalui JavaScript -->
+
                     </tbody>
                 </table>
             </div>
 
-            <!-- Pagination -->
+
             <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
                 <div class="flex justify-between items-center">
                     <div class="text-sm text-gray-700">
@@ -115,7 +145,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
         </div>
     </div>
 
-    <!-- Modal Detail Report -->
+
     <div id="reportModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
         <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
             <div class="flex justify-between items-center mb-4">
@@ -127,7 +157,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
                 </button>
             </div>
             <div id="modalContent" class="space-y-4">
-                <!-- Content akan diisi melalui JavaScript -->
+
             </div>
         </div>
     </div>
@@ -137,16 +167,16 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
             let currentPage = 1;
             const itemsPerPage = 10;
 
-            // Load initial data
+
             loadReports();
 
-            // Filter button click handler
+
             document.getElementById('filterBtn').addEventListener('click', function() {
                 currentPage = 1;
                 loadReports();
             });
 
-            // Pagination handlers
+
             document.getElementById('prevPage').addEventListener('click', function() {
                 if (currentPage > 1) {
                     currentPage--;
@@ -284,6 +314,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
             document.getElementById('reportModal').classList.add('hidden');
         });
     </script>
+    <script src="dashboard.js"></script>
 </body>
 
 </html>
