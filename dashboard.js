@@ -1,4 +1,3 @@
-// Mobile menu toggle
 const mobileMenuBtn = document.getElementById("mobileMenuBtn");
 const mobileMenu = document.getElementById("mobileMenu");
 
@@ -12,8 +11,6 @@ mobileMenuBtn.addEventListener("click", () => {
     mobileMenu.classList.remove("animate-fade-in");
   }
 });
-
-// Close mobile menu when clicking outside
 document.addEventListener("click", (event) => {
   const isClickInsideMenu = mobileMenu.contains(event.target);
   const isClickOnButton = mobileMenuBtn.contains(event.target);
@@ -28,7 +25,6 @@ document.addEventListener("click", (event) => {
   }
 });
 
-// Form handling and file upload
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("reportForm");
   const photoInput = document.getElementById("photos");
@@ -41,19 +37,16 @@ document.addEventListener("DOMContentLoaded", function () {
   const MAX_FILES = 4;
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
-  // Set default datetime-local value to current time
   const whenInput = document.getElementById("when");
   const now = new Date();
   now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
   whenInput.value = now.toISOString().slice(0, 16);
 
-  // Handle file selection
   photoInput.addEventListener("change", function (e) {
     const files = Array.from(e.target.files);
     handleFileSelection(files);
   });
 
-  // Handle drag and drop
   const dropZone = document.querySelector('label[for="photos"]');
 
   ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
@@ -90,15 +83,12 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function handleFileSelection(files) {
-    // Filter files
     const validFiles = files.filter((file) => {
-      // Check file type
       if (!file.type.startsWith("image/")) {
         showToast("Error: Hanya file gambar yang diperbolehkan", "error");
         return false;
       }
 
-      // Check file size
       if (file.size > MAX_FILE_SIZE) {
         showToast("Error: Ukuran file tidak boleh melebihi 5MB", "error");
         return false;
@@ -107,7 +97,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return true;
     });
 
-    // Check total files
     if (uploadedFiles.length + validFiles.length > MAX_FILES) {
       showToast(
         `Error: Maksimal ${MAX_FILES} foto yang diperbolehkan`,
@@ -116,7 +105,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Add valid files to uploaded files array
     uploadedFiles = [...uploadedFiles, ...validFiles];
     updatePhotoCount();
     displayPreviews();
@@ -163,7 +151,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Reset form
   resetBtn.addEventListener("click", function () {
     if (confirm("Apakah Anda yakin ingin mereset form?")) {
       form.reset();
@@ -174,11 +161,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Form submission
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    // Validate required fields
     const requiredFields = ["who", "what", "where", "when", "why", "how"];
     let isValid = true;
 
@@ -218,7 +203,8 @@ document.addEventListener("DOMContentLoaded", function () {
         formData.append("photos[]", file);
       });
 
-      const response = await fetch("submit_report.php", {
+      //Handling Request to Backend
+      const response = await fetch("backend/proces.php", {
         method: "POST",
         body: formData,
       });
