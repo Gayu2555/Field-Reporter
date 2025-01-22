@@ -1,5 +1,4 @@
 .env
-backend
 vendor/
 node_modules/
 package.json
