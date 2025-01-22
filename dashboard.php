@@ -61,7 +61,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
             <!-- Mobile Menu -->
             <div id="mobileMenu" class="hidden md:hidden py-2 absolute w-full left-0 bg-white/95 backdrop-blur-md border-b border-indigo-100">
                 <div class="space-y-1 px-4">
-                    <a href="inde class=" block text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-lg transition-colors">
+                    <a href="dashboard.php" class="block text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-lg transition-colors">
                         Home
                     </a>
                     <a href="report_log.php" class="block text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-lg transition-colors">

@@ -55,11 +55,9 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
                 </button>
             </div>
         </div>
-
-
         <div id="mobileMenu" class="hidden md:hidden py-2 absolute w-full left-0 bg-white/95 backdrop-blur-md border-b border-indigo-100">
             <div class="space-y-1 px-4">
-                <a href="inde class=" block text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-lg transition-colors">
+                <a href="dashboard.php" class="block text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-lg transition-colors">
                     Home
                 </a>
                 <a href="report_log.php" class="block text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-lg transition-colors">
@@ -195,13 +193,23 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
                 const searchQuery = document.getElementById('searchInput').value;
 
                 // Fetch data from backend
-                fetch(`backend/get-reports.php?page=${currentPage}&limit=${itemsPerPage}&start=${startDate}&end=${endDate}&search=${searchQuery}`)
+                fetch(`backend/get_reports.php?page=${currentPage}&limit=${itemsPerPage}&start=${startDate}&end=${endDate}&search=${searchQuery}`)
                     .then(response => response.json())
                     .then(data => {
-                        renderReports(data.reports);
-                        updatePagination(data.total);
+                        if (data.success) {
+                            renderReports(data.reports || []);
+                            updatePagination(data.total);
+                        } else {
+                            console.error('Error:', data.message);
+                            renderReports([]);
+                            updatePagination(0);
+                        }
                     })
-                    .catch(error => console.error('Error:', error));
+                    .catch(error => {
+                        console.error('Error:', error);
+                        renderReports([]);
+                        updatePagination(0);
+                    });
             }
 
             function renderReports(reports) {
